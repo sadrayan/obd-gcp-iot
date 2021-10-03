@@ -9,9 +9,9 @@
 
 module "project_services" {
   source  = "terraform-google-modules/project-factory/google//modules/project_services"
-  version = "3.3.0"
+  version = "10.1.1"
 
-  project_id    = var.project_name
+  project_id    = var.project_id
   activate_apis =  [
     "cloudresourcemanager.googleapis.com",
     "cloudfunctions.googleapis.com",

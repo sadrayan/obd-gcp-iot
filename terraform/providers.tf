@@ -5,7 +5,7 @@ provider "google" {
 
 terraform {
   backend "gcs" {
-    bucket = "obd-iot-tf-state-prod"
+    bucket = "obd-iot-tf-state"
     prefix = "terraform/state"
   }
 }

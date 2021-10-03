@@ -1,6 +1,6 @@
-variable "project_name" {
+variable "project_id" {
     description = "The project ID where all resources will be launched."
-    default     = ""
+    default     = "obd-iot"
     type        = string
 }
 
