@@ -18,13 +18,10 @@ module "project_services" {
     "pubsub.googleapis.com",
     "firestore.googleapis.com",
     "dataflow.googleapis.com",
-    "cloudiot.googleapis.com"
+    "cloudiot.googleapis.com",
+    "cloudbuild.googleapis.com"
   ]
 
   disable_services_on_destroy = false
   disable_dependent_services  = false
-}
-
-resource "google_storage_bucket" "bucket" {
-  name = "test-bucket-random-1231111"
 }

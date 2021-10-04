@@ -2,7 +2,7 @@
 /terraform/terraform-key.json
 /terraform/.terraform/
 /terraform/terraform.tfstate
-/venv/
 /devices/env/
+/app/src/node_modules/
 /devices/resources/rsa_*.pem
 .idea/

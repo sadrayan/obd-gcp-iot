@@ -1,0 +1,26 @@
+{
+  "name": "src",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "scripts": {
+    "zip": "npm-build-zip --destination=build/",
+    "test": "mocha --timeout=600000"
+  },
+  "dependencies": {
+    "@google-cloud/iot": "^2.0.0",
+    "@google-cloud/pubsub": "^2.0.0",
+    "fastify": "^3.22.0",
+    "yargs": "^16.0.0"
+  },
+  "devDependencies": {
+    "mocha": "^8.1.1",
+    "npm-build-zip": "^1.0.3",
+    "uuid": "^8.0.0"
+  },
+  "author": "sadrayan",
+  "license": "ISC"
+}
