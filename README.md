@@ -13,3 +13,5 @@ docker
 ```
 gcloud auth application-default login
 ```
+
+sudo apt-get install bluetooth bluez-utils blueman
