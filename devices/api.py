@@ -11,7 +11,8 @@ def main():
     print('Done creating the Core')
 
     obd_client = OBDClient()
-    schedule.every(10).seconds.do(core.publish_message, obd_client.get_readings())
+    core.publish_message(obd_client.get_readings())
+    schedule.every(int(config['DEFAULT']['obd_update_interval_sec'])).seconds.do(core.publish_message, obd_client.get_readings())
 
 if __name__ == '__main__':
     main()
