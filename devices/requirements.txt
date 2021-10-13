@@ -11,3 +11,4 @@ obd
 opencv-contrib-python
 picamera
 ELM327-emulator
+schedule

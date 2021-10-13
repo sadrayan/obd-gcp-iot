@@ -55,7 +55,7 @@ class Core:
     def create_jwt(self, project_id, private_key_file, algorithm):
         token = {
             'iat': datetime.datetime.utcnow(),
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=20),
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=1),
             'aud': project_id
         }
 
@@ -76,13 +76,13 @@ class Core:
         global minimum_backoff_time
         should_backoff = False
         minimum_backoff_time = 1
-        if (mqtt.connack_string(rc).contains('bad user name or password')):
-            self.client.username_pw_set(
-                username='unused',
-                password=self.create_jwt(
-                        self.project_id, self.private_key_file, self.algorithm))
-            
-
+        # if 'bad user name or password' in mqtt.connack_string(rc):
+        #     print('updating client')
+        #     self.client.loop()
+        #     self.client = self.get_client(
+        #         self.project_id, self.cloud_region, self.registry_id,
+        #         self.device_id, self.private_key_file, self.algorithm,
+        #         self.ca_certs, self.mqtt_bridge_hostname, self.mqtt_bridge_port)
 
     def on_disconnect(self, unused_client, unused_userdata, rc):
         print('on_disconnect', error_str(rc))
@@ -91,7 +91,8 @@ class Core:
 
 
     def on_publish(self, unused_client, unused_userdata, unused_mid):
-        print('on_publish')
+        # print('on_publish')
+        pass
 
 
     def on_message(self, unused_client, unused_userdata, message):
@@ -140,78 +141,3 @@ class Core:
         sub_topic = 'events' if self.message_type == 'event' else 'state'
         mqtt_topic = '/devices/{}/{}'.format(self.device_id, sub_topic)
         self.client.publish(mqtt_topic, payload, qos=1)
-
-
-
-
-# def mqtt_device_demo(args):
-#     global minimum_backoff_time
-#     global MAXIMUM_BACKOFF_TIME
-
-#     # Publish to the events or state topic based on the flag.
-#     sub_topic = 'events' if args.message_type == 'event' else 'state'
-
-#     mqtt_topic = '/devices/{}/{}'.format(args.device_id, sub_topic)
-
-#     jwt_iat = datetime.datetime.utcnow()
-#     jwt_exp_mins = args.jwt_expires_minutes
-#     client = get_client(
-#         args.project_id, args.cloud_region, args.registry_id,
-#         args.device_id, args.private_key_file, args.algorithm,
-#         args.ca_certs, args.mqtt_bridge_hostname, args.mqtt_bridge_port)
-
-#     # Publish num_messages messages to the MQTT bridge once per second.
-#     for i in range(1, args.num_messages + 1):
-#         # Process network events.
-#         client.loop()
-
-#         # Wait if backoff is required.
-#         if should_backoff:
-#             # If backoff time is too large, give up.
-#             if minimum_backoff_time > MAXIMUM_BACKOFF_TIME:
-#                 print('Exceeded maximum backoff time. Giving up.')
-#                 break
-
-#             # Otherwise, wait and connect again.
-#             delay = minimum_backoff_time + random.randint(0, 1000) / 1000.0
-#             print('Waiting for {} before reconnecting.'.format(delay))
-#             time.sleep(delay)
-#             minimum_backoff_time *= 2
-#             client.connect(args.mqtt_bridge_hostname, args.mqtt_bridge_port)
-#         payload = dict()
-#         payload['deviceId'] = args.device_id
-#         payload['timestamp'] = datetime.datetime.strftime(datetime.datetime.utcnow(), '%Y-%m-%d %H:%M:%S')
-#         payload['temperature'] = random.randint(-5, 20)
-#         payload = json.dumps(payload)
-
-#         # payload = '{"deviceId": "{0}", "timestamp": {1}, "temperature": {2}}'.format(
-#         #     args.device_id, datetime.datetime.utcnow(), random.randint(-5, 20)
-#         # )
-#         print('Publishing message {}/{}: \'{}\''.format(
-#                 i, args.num_messages, payload))
-
-#         seconds_since_issue = (datetime.datetime.utcnow() - jwt_iat).seconds
-#         if seconds_since_issue > 60 * jwt_exp_mins:
-#             print('Refreshing token after {}s'.format(seconds_since_issue))
-#             jwt_iat = datetime.datetime.utcnow()
-#             client.loop()
-#             client.disconnect()
-#             client = get_client(
-#                 args.project_id, args.cloud_region,
-#                 args.registry_id, args.device_id, args.private_key_file,
-#                 args.algorithm, args.ca_certs, args.mqtt_bridge_hostname,
-#                 args.mqtt_bridge_port)
-#         # Publish "payload" to the MQTT topic. qos=1 means at least once
-#         # delivery. Cloud IoT Core also supports qos=0 for at most once
-#         # delivery.
-#         client.publish(mqtt_topic, payload, qos=1)
-
-#         # Send events every second. State should not be updated as often
-#         for i in range(0, 60):
-#             time.sleep(1)
-#             client.loop()
-
-
-
-
-
