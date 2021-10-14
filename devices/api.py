@@ -10,9 +10,9 @@ def main():
     core = Core(config['DEFAULT'])
     print('Done creating the Core')
 
-    obd_client = OBDClient()
-    core.publish_message(obd_client.get_readings())
-    schedule.every(int(config['DEFAULT']['obd_update_interval_sec'])).seconds.do(core.publish_message, obd_client.get_readings())
+    obd_client = OBDClient(core)
+    # core.publish_message(obd_client.get_readings())
+    schedule.every(int(config['DEFAULT']['obd_update_interval_sec'])).seconds.do(obd_client.send_telemetry)
 
 if __name__ == '__main__':
     try:
@@ -22,4 +22,3 @@ if __name__ == '__main__':
             pass
     except KeyboardInterrupt:
         print('Shutting down :)')
-        
