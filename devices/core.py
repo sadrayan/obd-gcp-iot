@@ -7,6 +7,7 @@ import ssl
 import time
 import json
 import jwt
+import threading
 import paho.mqtt.client as mqtt
 
 import configparser
@@ -38,10 +39,14 @@ class Core:
         self.ca_certs = config['ca_certs']
         self.private_key_file = config['private_key_file']
 
-        print(self.private_key_file )
+        self.mqtt_config_topic  = '/devices/{}/config'.format(config['device_id'])
+        self.mqtt_command_topic = '/devices/{}/commands/#'.format(config['device_id'])
 
         # Publish to the events or state topic based on the flag.
-        sub_topic = 'events' if self.message_type == 'event' else 'state'
+        self.sub_topic = 'events' if self.message_type == 'event' else 'state'
+        self.mqtt_topic = '/devices/{}/{}'.format(self.device_id, self.sub_topic)
+
+        self.lock = threading.Lock()
 
         self.client = self.get_client(
             self.project_id, self.cloud_region, self.registry_id,
@@ -69,25 +74,18 @@ class Core:
     def error_str(rc):
         return '{}: {}'.format(rc, mqtt.error_string(rc))
 
-
-    def on_connect(self, unused_client, unused_userdata, unused_flags, rc):
+    def on_connect(self, client, unused_userdata, unused_flags, rc):
         print('on_connect', mqtt.connack_string(rc))
-        global should_backoff
-        global minimum_backoff_time
-        should_backoff = False
-        minimum_backoff_time = 1
-        # if 'bad user name or password' in mqtt.connack_string(rc):
-        #     print('updating client')
-        #     self.client.loop()
-        #     self.client = self.get_client(
-        #         self.project_id, self.cloud_region, self.registry_id,
-        #         self.device_id, self.private_key_file, self.algorithm,
-        #         self.ca_certs, self.mqtt_bridge_hostname, self.mqtt_bridge_port)
+        # Subscribe 
+        print('Subscribing to {}'.format(self.mqtt_config_topic))
+        client.subscribe(self.mqtt_config_topic, qos=1)
+        print('Subscribing to {}'.format(self.mqtt_command_topic))
+        client.subscribe(self.mqtt_command_topic, qos=1)
 
-    def on_disconnect(self, unused_client, unused_userdata, rc):
+    def on_disconnect(self, client, unused_userdata, rc):
         print('on_disconnect', error_str(rc))
-        global should_backoff
-        should_backoff = True
+        # re-connect
+        self.client.connect(gateway_state.mqtt_bridge_hostname, gateway_state.mqtt_bridge_port)
 
 
     def on_publish(self, unused_client, unused_userdata, unused_mid):
@@ -100,6 +98,8 @@ class Core:
         print('Received message \'{}\' on topic \'{}\' with Qos {}'.format(
                 payload, message.topic, str(message.qos)))
 
+    def on_subscribe(unused_client, unused_userdata, mid, granted_qos):
+        print('on_subscribe: mid {}, qos {}'.format(mid, granted_qos))
 
     def get_client(
             self, project_id, cloud_region, registry_id, device_id, private_key_file,
@@ -121,23 +121,15 @@ class Core:
         client.on_publish    = self.on_publish
         client.on_disconnect = self.on_disconnect
         client.on_message    = self.on_message
+        client.on_subscribe  = self.on_subscribe
 
         client.connect(mqtt_bridge_hostname, mqtt_bridge_port)
-
-        # Subscribe 
-        mqtt_config_topic  = '/devices/{}/config'.format(device_id)
-        mqtt_command_topic = '/devices/{}/commands/#'.format(device_id)
-        print('Subscribing to {}'.format(mqtt_config_topic))
-        client.subscribe(mqtt_config_topic, qos=1)
-        print('Subscribing to {}'.format(mqtt_command_topic))
-        client.subscribe(mqtt_command_topic, qos=0)
-
+        
         return client
 
 
     def publish_message(self, payload):
-        print('Publishing message {}'.format(payload))
-        # Publish to the events or state topic based on the flag.
-        sub_topic = 'events' if self.message_type == 'event' else 'state'
-        mqtt_topic = '/devices/{}/{}'.format(self.device_id, sub_topic)
-        self.client.publish(mqtt_topic, payload, qos=1)
+        with self.lock:
+            print('Publishing message {}'.format(payload))
+            infot = self.client.publish(self.mqtt_topic, payload, qos=1)
+            infot.wait_for_publish()

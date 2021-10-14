@@ -15,7 +15,11 @@ def main():
     schedule.every(int(config['DEFAULT']['obd_update_interval_sec'])).seconds.do(core.publish_message, obd_client.get_readings())
 
 if __name__ == '__main__':
-    main()
-    while 1:
-        schedule.run_pending()
-        pass
+    try:
+        main()
+        while 1:
+            schedule.run_pending()
+            pass
+    except KeyboardInterrupt:
+        print('Shutting down :)')
+        
