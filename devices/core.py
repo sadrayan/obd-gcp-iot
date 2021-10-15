@@ -48,34 +48,43 @@ class Core:
 
         self.lock = threading.Lock()
 
-        self.client = self.get_client(
-            self.project_id, self.cloud_region, self.registry_id,
-            self.device_id, self.private_key_file, self.algorithm,
-            self.ca_certs, self.mqtt_bridge_hostname, self.mqtt_bridge_port)
+        self.client = self.get_client()
 
-        # Process network events.
-        self.client.loop_start()
-
-
-    def create_jwt(self, project_id, private_key_file, algorithm):
+    def create_jwt(self):
         token = {
             'iat': datetime.datetime.utcnow(),
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=1),
-            'aud': project_id
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=30),
+            'aud': self.project_id
         }
 
-        with open(private_key_file, 'r') as f:
+        print('iat', datetime.datetime.strftime(datetime.datetime.utcnow(), '%Y-%m-%d %H:%M:%S'))
+        print('exp', datetime.datetime.strftime(datetime.datetime.utcnow() + datetime.timedelta(seconds=30), '%Y-%m-%d %H:%M:%S'))
+
+        with open(self.private_key_file, 'r') as f:
             private_key = f.read()
 
-        print('Creating JWT using {} from private key file {}'.format(algorithm, private_key_file))
+        print('Creating JWT using {} from private key file {}'.format(self.algorithm, self.private_key_file))
 
-        return jwt.encode(token, private_key, algorithm=algorithm)
+        return jwt.encode(token, private_key, algorithm=self.algorithm)
 
     def error_str(rc):
         return '{}: {}'.format(rc, mqtt.error_string(rc))
 
     def on_connect(self, client, unused_userdata, unused_flags, rc):
         print('on_connect', mqtt.connack_string(rc))
+
+        if 'Connection Refused: bad user name or password.' in mqtt.connack_string(rc):
+            print('refreshing JWT')
+
+            try:
+                client.username_pw_set(
+                    username='unused',
+                    password=self.create_jwt())
+                client.connect(self.mqtt_bridge_hostname, self.mqtt_bridge_port)
+            except Exception as ex:
+                print("Could not reconnect to broker.")
+                print(ex)
+
         # Subscribe 
         print('Subscribing to {}'.format(self.mqtt_config_topic))
         client.subscribe(self.mqtt_config_topic, qos=1)
@@ -84,38 +93,30 @@ class Core:
 
     def on_disconnect(self, client, unused_userdata, rc):
         print('on_disconnect', error_str(rc))
-        # re-connect
-        self.client.connect(gateway_state.mqtt_bridge_hostname, gateway_state.mqtt_bridge_port)
-
 
     def on_publish(self, unused_client, unused_userdata, unused_mid):
-        # print('on_publish')
-        pass
-
-
+        print('on_publish')
+        
     def on_message(self, unused_client, unused_userdata, message):
         payload = str(message.payload.decode('utf-8'))
         print('Received message \'{}\' on topic \'{}\' with Qos {}'.format(
                 payload, message.topic, str(message.qos)))
 
-    def on_subscribe(unused_client, unused_userdata, mid, granted_qos):
+    def on_subscribe(self, unused_client, unused_userdata, mid, granted_qos):
         print('on_subscribe: mid {}, qos {}'.format(mid, granted_qos))
 
-    def get_client(
-            self, project_id, cloud_region, registry_id, device_id, private_key_file,
-            algorithm, ca_certs, mqtt_bridge_hostname, mqtt_bridge_port):
+    def get_client(self):
         client_id = 'projects/{}/locations/{}/registries/{}/devices/{}'.format(
-                project_id, cloud_region, registry_id, device_id)
+                self.project_id, self.cloud_region, self.registry_id, self.device_id)
         print('Device client_id is \'{}\''.format(client_id))
 
         client = mqtt.Client(client_id=client_id)
 
         client.username_pw_set(
                 username='unused',
-                password=self.create_jwt(
-                        project_id, private_key_file, algorithm))
+                password=self.create_jwt())
 
-        client.tls_set(ca_certs=ca_certs, tls_version=ssl.PROTOCOL_TLSv1_2)
+        client.tls_set(ca_certs=self.ca_certs, tls_version=ssl.PROTOCOL_TLSv1_2)
 
         client.on_connect    = self.on_connect
         client.on_publish    = self.on_publish
@@ -123,7 +124,11 @@ class Core:
         client.on_message    = self.on_message
         client.on_subscribe  = self.on_subscribe
 
-        client.connect(mqtt_bridge_hostname, mqtt_bridge_port)
+        client.connect(self.mqtt_bridge_hostname, self.mqtt_bridge_port)
+        print("Waiting for client to connect.")
+        time.sleep(2)
+        
+        client.loop_start()
         
         return client
 
@@ -131,5 +136,8 @@ class Core:
     def publish_message(self, payload):
         with self.lock:
             print('Publishing message {}'.format(payload))
-            infot = self.client.publish(self.mqtt_topic, payload, qos=1)
-            infot.wait_for_publish()
+            msg_info = self.client.publish(self.mqtt_topic, payload, qos=1)
+            # This call will block until the message is published.
+            msg_info.wait_for_publish()
+            if msg_info.is_published() == False:
+                print('Message is not yet published.')

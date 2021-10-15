@@ -9,7 +9,7 @@ class OBDClient:
         config.read("config.ini")
         self.config = config['DEFAULT']
 
-        self.connection = obd.OBD('/dev/pts/2') 
+        self.connection = obd.OBD('/dev/pts/3') 
 
         self.core = core
 
