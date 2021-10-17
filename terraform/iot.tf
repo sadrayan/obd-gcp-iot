@@ -8,7 +8,7 @@ resource "google_pubsub_topic" "iot-telemetry" {
 
 
 resource "google_cloudiot_registry" "obd-iot-registry" {
-  name     = "obd-iot-registry"
+  name = "obd-iot-registry"
 
   event_notification_configs {
     pubsub_topic_name = google_pubsub_topic.iot-telemetry.id
@@ -29,10 +29,10 @@ resource "google_cloudiot_registry" "obd-iot-registry" {
 
   log_level = "INFO"
 
-#   credentials {
-#     public_key_certificate = {
-#       format      = "X509_CERTIFICATE_PEM"
-#       certificate = file("test-fixtures/rsa_cert.pem")
-#     }
-#   }
+  #   credentials {
+  #     public_key_certificate = {
+  #       format      = "X509_CERTIFICATE_PEM"
+  #       certificate = file("test-fixtures/rsa_cert.pem")
+  #     }
+  #   }
 }
