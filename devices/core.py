@@ -53,12 +53,9 @@ class Core:
     def create_jwt(self):
         token = {
             'iat': datetime.datetime.utcnow(),
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=30),
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
             'aud': self.project_id
         }
-
-        print('iat', datetime.datetime.strftime(datetime.datetime.utcnow(), '%Y-%m-%d %H:%M:%S'))
-        print('exp', datetime.datetime.strftime(datetime.datetime.utcnow() + datetime.timedelta(seconds=30), '%Y-%m-%d %H:%M:%S'))
 
         with open(self.private_key_file, 'r') as f:
             private_key = f.read()
