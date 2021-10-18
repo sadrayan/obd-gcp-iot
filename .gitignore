@@ -6,5 +6,6 @@
 /app/src/node_modules/
 /devices/resources/rsa_*.pem
 /devices/__pycache__/
+/devices/deployment
 .idea/
 *.log
