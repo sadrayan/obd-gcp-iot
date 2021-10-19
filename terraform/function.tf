@@ -4,7 +4,7 @@ locals {
 }
 
 resource "google_storage_bucket" "bucket" {
-  name = "${var.project_id}-function"
+  name = "${var.project_id}-deployment"
 }
 
 # Compress source code

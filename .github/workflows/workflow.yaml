@@ -54,3 +54,10 @@ jobs:
     - name: build device
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: cd ../devices && ./deployment.sh
+
+    - name: upload-files
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: google-github-actions/upload-cloud-storage@main
+      with:
+        path: /deployment/rpi-package.zip
+        destination: ${{ secrets.GCP_PROJECT_ID }}-deployment/device/
