@@ -62,7 +62,7 @@ jobs:
       # Checkout the repository to the GitHub Actions runner
       - name: Checkout
         uses: actions/checkout@v2
-        
+
       - name: build device
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: ./deployment.sh
@@ -71,5 +71,5 @@ jobs:
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         uses: google-github-actions/upload-cloud-storage@main
         with:
-          path: /deployment/rpi-package.zip
+          path: deployment/rpi-package.zip
           destination: ${{ secrets.GCP_PROJECT_ID }}-deployment/device/
