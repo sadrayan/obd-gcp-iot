@@ -49,3 +49,9 @@ jobs:
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: terraform apply -auto-approve
+
+      # Generates an execution apply for Terraform
+    - name: build device
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      working-directory: ../devices
+      run: ./deployment.sh
