@@ -3,6 +3,7 @@
 python3 -m venv env
 source env/bin/activate
 pip install -r requirements.txt
+mkdir -p deployment
 cd env/lib/python3.*/site-packages/
 zip -r9 ${OLDPWD}/deployment/rpi-package.zip .
 cd $OLDPWD
