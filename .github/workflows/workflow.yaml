@@ -57,7 +57,12 @@ jobs:
       run:
         shell: bash
         working-directory: ./devices
+
     steps:
+      # Checkout the repository to the GitHub Actions runner
+      - name: Checkout
+        uses: actions/checkout@v2
+        
       - name: build device
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: ./deployment.sh
