@@ -4,15 +4,12 @@ import configparser
 import datetime
 
 class OBDClient:
-    def __init__(self, core):
+    def __init__(self):
         config = configparser.ConfigParser()		
         config.read("config.ini")
         self.config = config['DEFAULT']
 
-        self.connection = obd.OBD('/dev/pts/3') 
-
-        self.core = core
-
+        self.connection = obd.OBD('/dev/pts/1') 
 
     def get_readings(self):       
         payload = dict()
@@ -22,8 +19,4 @@ class OBDClient:
         payload['RPM'] = str(self.connection.query(obd.commands.RPM).value)
         payload['fuel_status'] = str(self.connection.query(obd.commands.FUEL_STATUS).value)        
         payload['fuel_type'] = str(self.connection.query(obd.commands.FUEL_TYPE).value)
-        return json.dumps(payload)
-
-    def send_telemetry(self):
-        self.core.publish_message(self.get_readings())
-
+        return payload

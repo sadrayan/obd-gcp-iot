@@ -7,7 +7,7 @@ from datetime import datetime
 # https://www.engineersgarage.com/articles-raspberry-pi-neo-6m-gps-module-interfacing/
 # $GPGLL,Latitude,DirLat,Longitude,DirLongitude,hhmmss:ss,A,cs<CR><LF>
 
-class GPS:
+class GPSClient:
 	def __init__(self):
 
 		self.ser = serial.Serial(port = '/dev/ttyUSB2', baudrate=9600, timeout=5)
@@ -28,7 +28,7 @@ class GPS:
 				self.ser.write(('AT+CGPSINFO'+'\r\n').encode())
 				time.sleep(0.5)
 				line = self.ser.readline().decode('ascii', errors='replace')
-				gsp_response = {}
+				gsp_response = dict()
 				# print(line) 
 				if ',,,,,,' in line:
 					print('GPS is not ready')
@@ -74,8 +74,3 @@ class GPS:
 			result = -result 
 		return  result
 		# return deg + " deg " + min + "." + tail + " min"
-
-
-ws_gps = GPS()
-for i in range(2):
-	print(i, ws_gps.get_gps_coordinate())
