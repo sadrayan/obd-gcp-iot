@@ -1,0 +1,14 @@
+[
+    {
+      "name": "timestamp",
+      "type": "STRING",
+      "mode": "NULLABLE",
+      "description": "The timestamp of sensor"
+    },
+    {
+      "name": "deviceId",
+      "type": "STRING",
+      "mode": "NULLABLE",
+      "description": "Device ID"
+    }
+  ]
