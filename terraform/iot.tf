@@ -7,7 +7,7 @@ resource "google_pubsub_topic" "iot_telemetry" {
 }
 
 
-resource "google_cloudiot_registry" "obd-iot-registry" {
+resource "google_cloudiot_registry" "obd_iot_registry" {
   name = "obd_iot_registry"
 
   event_notification_configs {
