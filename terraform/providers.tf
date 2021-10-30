@@ -10,7 +10,7 @@ provider "google-beta" {
 
 terraform {
   backend "gcs" {
-    bucket = "obd_iot_tf_state"
+    bucket = "obd-iot-tf-state"
     prefix = "terraform/state"
   }
 }
