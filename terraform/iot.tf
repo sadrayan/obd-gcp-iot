@@ -1,22 +1,22 @@
-resource "google_pubsub_topic" "iot-devicestatus" {
-  name = "iot-devicestatus"
+resource "google_pubsub_topic" "iot_devicestatus" {
+  name = "iot_devicestatus"
 }
 
-resource "google_pubsub_topic" "iot-telemetry" {
-  name = "iot-telemetry"
+resource "google_pubsub_topic" "iot_telemetry" {
+  name = "iot_telemetry"
 }
 
 
-resource "google_cloudiot_registry" "obd-iot-registry" {
-  name = "obd-iot-registry"
+resource "google_cloudiot_registry" "obd_iot_registry" {
+  name = "obd_iot_registry"
 
   event_notification_configs {
-    pubsub_topic_name = google_pubsub_topic.iot-telemetry.id
+    pubsub_topic_name = google_pubsub_topic.iot_telemetry.id
     subfolder_matches = ""
   }
 
   state_notification_config = {
-    pubsub_topic_name = google_pubsub_topic.iot-devicestatus.id
+    pubsub_topic_name = google_pubsub_topic.iot_devicestatus.id
   }
 
   mqtt_config = {
@@ -32,7 +32,7 @@ resource "google_cloudiot_registry" "obd-iot-registry" {
   #   credentials {
   #     public_key_certificate = {
   #       format      = "X509_CERTIFICATE_PEM"
-  #       certificate = file("test-fixtures/rsa_cert.pem")
+  #       certificate = file("test_fixtures/rsa_cert.pem")
   #     }
   #   }
 }

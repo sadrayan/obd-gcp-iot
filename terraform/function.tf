@@ -4,14 +4,14 @@ locals {
 }
 
 resource "google_storage_bucket" "bucket" {
-  name = "${var.project_id}-deployment"
+  name = "${var.project_id}_deployment"
 }
 
 # Compress source code
 data "archive_file" "source" {
   type        = "zip"
   source_dir  = "../app/src/"
-  output_path = "/tmp/function-${local.timestamp}.zip"
+  output_path = "/tmp/function_${local.timestamp}.zip"
 }
 
 resource "google_storage_bucket_object" "zip" {
@@ -24,7 +24,7 @@ resource "google_storage_bucket_object" "zip" {
 
 # Create Cloud Function
 resource "google_cloudfunctions_function" "function" {
-  name    = "device-function"
+  name    = "device_function"
   runtime = "nodejs12"
 
   available_memory_mb   = 1024
