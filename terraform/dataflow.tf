@@ -6,6 +6,6 @@ resource "google_dataflow_job" "telemetry_to_bq_job" {
   temp_gcs_location = "${google_storage_bucket.bucket_data.url}/tmp"
   parameters = {
     inputTopic      = google_pubsub_topic.iot_telemetry.id
-    outputTableSpec = "${var.project_name}:${google_bigquery_table.device_data.dataset_id}.${google_bigquery_table.device_data.table_id}"
+    outputTableSpec = "${var.project_id}:${google_bigquery_table.device_data.dataset_id}.${google_bigquery_table.device_data.table_id}"
   }
 }
