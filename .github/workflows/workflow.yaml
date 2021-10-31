@@ -79,4 +79,4 @@ jobs:
         uses: google-github-actions/upload-cloud-storage@main
         with:
           path: ${{ github.workspace }}/devices/deployment/rpi-package.zip
-          destination: ${{ secrets.GCP_PROJECT_ID }}-deployment/device/
+          destination: ${{ secrets.GCP_PROJECT_ID }}_data_deployment/device/
