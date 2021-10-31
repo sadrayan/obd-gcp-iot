@@ -15,7 +15,7 @@ resource "google_bigquery_dataset" "dataset" {
 resource "google_bigquery_table" "device_data" {
   dataset_id = google_bigquery_dataset.dataset.dataset_id
   table_id   = "cvt_device_data"
-  schema = file("${path.module}/schema.json")
+  schema     = file("${path.module}/schema.json")
   labels = {
     env = "cvt_iot"
   }
