@@ -72,5 +72,5 @@ class GPSClient:
 		result = float(deg) + (float(min + "." + tail) / 60)
 		if 'W' == dir or 'S' == dir:
 			result = -result 
-		return  result
+		return  float("{:.5f}".format(result))
 		# return deg + " deg " + min + "." + tail + " min"
