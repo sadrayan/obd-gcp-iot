@@ -22,7 +22,15 @@ class CVTClient:
     def get_message(self):
         response = self.obd_client.get_readings()
         response['gps'] = self.gps_client.get_gps_coordinate()
-        return json.dumps(response)
+        payload = dict()
+        payload['deviceId']     = response['deviceId']
+        payload['speed']        = response['speed']
+        payload['RPM']          = response['RPM']
+        payload['fuel_status']  = response['fuel_status']
+        payload['latitude']     = response['gps']['latitude']
+        payload['longitude']    = response['gps']['longitude']
+        payload['timestamp']    = response['timestamp']
+        return json.dumps(payload)
 
     def send_telemetry(self):
         self.core.publish_message(self.get_message())         

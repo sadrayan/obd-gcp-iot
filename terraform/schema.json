@@ -1,14 +1,34 @@
 [
     {
-      "name": "timestamp",
-      "type": "STRING",
-      "mode": "NULLABLE",
-      "description": "The timestamp of sensor"
+        "name": "deviceId",
+        "type": "STRING",
+        "mode": "NULLABLE",
+        "description": "Device ID"
     },
     {
-      "name": "deviceId",
-      "type": "STRING",
-      "mode": "NULLABLE",
-      "description": "Device ID"
+        "name": "speed",
+        "type": "STRING"
+    },
+    {
+        "name": "RPM", 
+        "type": "STRING"
+    },
+    {
+        "name": "fuel_status", 
+        "type": "STRING"
+    },
+    {
+        "name": "latitude",
+        "type": "FLOAT"
+    },
+    {
+        "name": "longitude",
+        "type": "FLOAT"
+    },
+    {
+        "name": "timestamp",
+        "type": "STRING",
+        "mode": "NULLABLE",
+        "description": "The timestamp of cvt"
     }
   ]
