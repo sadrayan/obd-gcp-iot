@@ -10,7 +10,8 @@ from datetime import datetime
 class GPSClient:
 	def __init__(self):
 
-		self.ser = serial.Serial(port = '/dev/ttyUSB2', baudrate=9600, timeout=5)
+		# self.ser = serial.Serial(port = '/dev/ttyUSB2', baudrate=9600, timeout=5)
+		self.ser = serial.Serial(port = "/dev/ttyS0", baudrate=115200)
 		self.ser.flushInput()
 
 		self.start_session()
@@ -29,7 +30,7 @@ class GPSClient:
 				time.sleep(0.5)
 				line = self.ser.readline().decode('ascii', errors='replace')
 				gsp_response = dict()
-				# print(line) 
+				print(line) 
 				if ',,,,,,' in line:
 					print('GPS is not ready')
 					self.start_session()
@@ -44,11 +45,11 @@ class GPSClient:
 					gsp_response['longitude'] = self.decode(nmeaobj.lon, nmeaobj.lon_dir)		    # ±ddd.dddddd           [-180.000000,80.000000]
 					gsp_response['lat_dir']   = nmeaobj.lat_dir
 					gsp_response['lon_dir']   = nmeaobj.lon_dir
-					gsp_response['latitude_dds']   = {'latitude_minutes'  : nmeaobj.latitude_minutes,  'latitude_seconds' : nmeaobj.latitude_seconds}
-					gsp_response['longitude_dds']  = {'longitude_minutes' : nmeaobj.longitude_minutes, 'longitude_seconds': nmeaobj.longitude_seconds}
+					gsp_response['latitude_dds']   = {'latitude_minutes'  : round(nmeaobj.latitude_minutes, 5), 'latitude_seconds' : round(nmeaobj.latitude_seconds)}
+					gsp_response['longitude_dds']  = {'longitude_minutes' : round(nmeaobj.longitude_minutes, 5),'longitude_seconds': round(nmeaobj.longitude_seconds)}
 					# gsp_response['altitude'] = 0.0     # in meters
 					# gsp_response['speed'] = 0.0        # km/h [0,999.99]
-					gsp_response['timestamp'] = str(datetime.utcnow()) 
+					gsp_response['timestamp'] = datetime.strftime(datetime.utcnow(), '%Y-%m-%d %H:%M:%S')
 					# print(gsp_response)
 					print('https://www.google.com/maps?q={},{}'.format(gsp_response['latitude'], gsp_response['longitude']))
 					return gsp_response
@@ -58,6 +59,8 @@ class GPSClient:
 			except serial.SerialException as e:
 				print('Device error: {}'.format(e))
 				break
+			except Exception as e:
+				print(e)
 
 	# Convert NMEA absolute position to decimal degrees
 	# "ddmm.mmmm" or "dddmm.mmmm" really is D+M/60,
@@ -72,5 +75,7 @@ class GPSClient:
 		result = float(deg) + (float(min + "." + tail) / 60)
 		if 'W' == dir or 'S' == dir:
 			result = -result 
-		return  float("{:.5f}".format(result))
-		# return deg + " deg " + min + "." + tail + " min"
+		return  round(result, 5)
+
+gps_client = GPSClient()
+print(gps_client.get_gps_coordinate())
