@@ -2,8 +2,6 @@ cryptography==3.2
 pyjwt==1.7.1
 paho-mqtt==1.5.0
 obd
-opencv-contrib-python
-picamera
 ELM327-emulator
 RPi.GPIO
 schedule
