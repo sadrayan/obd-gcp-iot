@@ -3,10 +3,6 @@ locals {
   root_dir  = abspath("../")
 }
 
-resource "google_storage_bucket" "bucket" {
-  name = "${var.project_id}_deployment"
-}
-
 # Compress source code
 data "archive_file" "source" {
   type        = "zip"
@@ -21,7 +17,6 @@ resource "google_storage_bucket_object" "zip" {
   source = data.archive_file.source.output_path
 }
 
-
 # Create Cloud Function
 resource "google_cloudfunctions_function" "function" {
   name    = "device_function"
@@ -32,6 +27,10 @@ resource "google_cloudfunctions_function" "function" {
   source_archive_object = google_storage_bucket_object.zip.name
   trigger_http          = true
   entry_point           = "listDevice"
+  event_trigger {
+    event_type = "google.storage.object.finalize"
+    resource   = "${google_storage_bucket.bucket_data.name}/device/"
+  }
 }
 
 # Create IAM entry so all users can invoke the function
