@@ -1,5 +1,5 @@
-import fetch from 'node-fetch'
-import dotenv from 'dotenv'
+const fetch = require('node-fetch')
+const dotenv = require('dotenv')
 dotenv.config();
 
 /**
@@ -17,7 +17,7 @@ exports.listDevice = (file, context) => {
   console.log(`  Metageneration: ${file.metageneration}`);
   console.log(`  Created: ${file.timeCreated}`);
   console.log(`  Updated: ${file.updated}`);
-  
+
   var user = process.env.MENDER_USERNAME
   var password = process.env.MENDER_PASSWORD
   console.log(user, password)
