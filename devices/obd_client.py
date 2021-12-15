@@ -9,7 +9,7 @@ class OBDClient:
         config.read("config.ini")
         self.config = config['DEFAULT']
 
-        self.connection = obd.OBD('/dev/pts/1') 
+        self.connection = obd.OBD('/dev/pts/3') 
 
     def get_readings(self):       
         payload = dict()

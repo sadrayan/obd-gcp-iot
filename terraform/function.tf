@@ -20,7 +20,7 @@ resource "google_storage_bucket_object" "zip" {
 # Create Cloud Function
 resource "google_cloudfunctions_function" "function" {
   name    = "device_function"
-  runtime = "nodejs12"
+  runtime = "nodejs16"
 
   available_memory_mb   = 1024
   source_archive_bucket = google_storage_bucket.bucket.name
