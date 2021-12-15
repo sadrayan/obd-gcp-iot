@@ -26,15 +26,15 @@ resource "google_cloudfunctions_function" "function" {
   source_archive_bucket = google_storage_bucket.bucket.name
   source_archive_object = google_storage_bucket_object.zip.name
   entry_point           = "listDevice"
-  
+
   event_trigger {
     event_type = "google.storage.object.finalize"
     resource   = google_storage_bucket.bucket_data.name
   }
 
   environment_variables = {
-    MENDER_USERNAME="username"
-    MENDER_PASSWORD="password"
+    MENDER_USERNAME = "username"
+    MENDER_PASSWORD = "password"
   }
 }
 
