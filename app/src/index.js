@@ -1,6 +1,6 @@
-const fetch = require('node-fetch')
-const dotenv = require('dotenv')
-dotenv.config();
+// const fetch = require('node-fetch')
+import { config } from 'dotenv';
+config();
 
 /**
  * Generic background Cloud Function to be triggered by Cloud Storage.
@@ -8,7 +8,7 @@ dotenv.config();
  * @param {object} file The Cloud Storage file metadata.
  * @param {object} context The event metadata.
  */
-exports.listDevice = (file, context) => {
+export function listDevice(file, context) {
 
   console.log(`  Event: ${context.eventId}`);
   console.log(`  Event Type: ${context.eventType}`);
