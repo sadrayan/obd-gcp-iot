@@ -9,3 +9,4 @@
 /devices/deployment
 .idea/
 *.log
+/app/src/.env
