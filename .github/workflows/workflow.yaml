@@ -49,6 +49,9 @@ jobs:
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: terraform apply -auto-approve
+      env:
+        MENDER_USERNAME : ${{ secrets.MENDER_USERNAME }}
+        MENDER_PASSWORD : ${{ secrets.MENDER_PASSWORD }}
 
   device:
     name: "device build"

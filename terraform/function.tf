@@ -33,8 +33,8 @@ resource "google_cloudfunctions_function" "function" {
   }
 
   environment_variables = {
-    MENDER_USERNAME = "username"
-    MENDER_PASSWORD = "password"
+    MENDER_USERNAME = var.MENDER_USERNAME
+    MENDER_PASSWORD = var.MENDER_PASSWORD
   }
 }
 

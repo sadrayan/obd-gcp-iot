@@ -15,3 +15,14 @@ variable "zone" {
   default     = "us-central1-a"
   type        = string
 }
+
+variable "MENDER_USERNAME" {
+  description = "Mender Username"
+  type        = string
+}
+
+variable "MENDER_PASSWORD" {
+  description = "Mender PASSWORD"
+  type        = string
+}
+
