@@ -9,6 +9,7 @@ dotenv.config();
  * @param {object} context The event metadata.
  */
 exports.listDevice = (file, context) => {
+
   console.log(`  Event: ${context.eventId}`);
   console.log(`  Event Type: ${context.eventType}`);
   console.log(`  Bucket: ${file.bucket}`);
@@ -16,6 +17,10 @@ exports.listDevice = (file, context) => {
   console.log(`  Metageneration: ${file.metageneration}`);
   console.log(`  Created: ${file.timeCreated}`);
   console.log(`  Updated: ${file.updated}`);
+  
+  var user = process.env.MENDER_USERNAME
+  var password = process.env.MENDER_PASSWORD
+  console.log(user, password)
 }
 
 // var user = process.env.MENDER_USERNAME
