@@ -3,27 +3,17 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "type": "module",
   "engines": {
-    "node": ">=12.0.0"
+    "node": "16.x.x"
   },
   "scripts": {
-    "zip": "npm-build-zip --destination=build/",
-    "test": "mocha --timeout=600000"
+    "start": "node index.js"
   },
   "dependencies": {
-    "@google-cloud/iot": "^2.0.0",
-    "@google-cloud/pubsub": "^2.0.0",
-    "dotenv": "^10.0.0",
-    "fastify": "^3.22.0",
-    "node-fetch": "^3.1.0",
-    "yargs": "^16.0.0"
+    "dotenv": "^10.0.0"
   },
   "devDependencies": {
-    "mocha": "^8.1.1",
     "nodemon": "^2.0.15",
-    "npm-build-zip": "^1.0.3",
-    "uuid": "^8.0.0"
   },
   "author": "sadrayan",
   "license": "ISC"
