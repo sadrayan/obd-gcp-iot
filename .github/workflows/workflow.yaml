@@ -58,6 +58,7 @@ jobs:
 
   device:
     name: "device build"
+    needs: terraform
     runs-on: ubuntu-latest
     defaults:
       run:

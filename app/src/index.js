@@ -15,7 +15,7 @@ const listDevice = async (file, context) => {
   console.log(res);
 };
 
-file = { bucket: "bucket", name: "somefile.txt" };
-listDevice(file, null);
+// file = { bucket: "bucket", name: "somefile.txt" };
+// listDevice(file, null);
 
 exports.listDevice;
