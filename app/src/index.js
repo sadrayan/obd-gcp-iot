@@ -6,7 +6,7 @@ const { authorizeMender, getDeployments } = require("./mender_service");
  * @param {object} file The Cloud Storage file metadata.
  * @param {object} context The event metadata.
  */
-async function listDevice (file, context) {
+ exports.listDevice = async(file, context) => {
   console.log(`  Bucket: ${file.bucket}`);
   console.log(`  File: ${file.name}`);
 
@@ -17,5 +17,3 @@ async function listDevice (file, context) {
 
 // file = { bucket: "bucket", name: "somefile.txt" };
 // listDevice(file, null);
-
-exports.listDevice;
