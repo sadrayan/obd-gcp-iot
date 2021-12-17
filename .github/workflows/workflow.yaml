@@ -43,7 +43,7 @@ jobs:
 
     # Generates an execution plan for Terraform
     - name: Terraform Plan
-      run: terraform plan -lock=false
+      run: terraform plan 
       env:
         TF_VAR_MENDER_USERNAME : ${{ secrets.MENDER_USERNAME }}
         TF_VAR_MENDER_PASSWORD : ${{ secrets.MENDER_PASSWORD }}
@@ -51,7 +51,7 @@ jobs:
     # Generates an execution apply for Terraform
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      run: terraform apply -auto-approve -lock=false
+      run: terraform apply -auto-approve 
       env:
         TF_VAR_MENDER_USERNAME : ${{ secrets.MENDER_USERNAME }}
         TF_VAR_MENDER_PASSWORD : ${{ secrets.MENDER_PASSWORD }}
@@ -86,4 +86,4 @@ jobs:
         uses: google-github-actions/upload-cloud-storage@main
         with:
           path: ${{ github.workspace }}/devices/deployment/rpi-package.zip
-          destination: ${{ secrets.GCP_PROJECT_ID }}_data_deployment/device/
+          destination: ${{ secrets.GCP_PROJECT_ID }}_data_deployment/device/rpi-package.zip#${{GITHUB_SHA}}
