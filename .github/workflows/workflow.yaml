@@ -43,7 +43,7 @@ jobs:
 
     # Generates an execution plan for Terraform
     - name: Terraform Plan
-      run: terraform plan 
+      run: terraform plan -lock=false
       env:
         TF_VAR_MENDER_USERNAME : ${{ secrets.MENDER_USERNAME }}
         TF_VAR_MENDER_PASSWORD : ${{ secrets.MENDER_PASSWORD }}
@@ -51,7 +51,7 @@ jobs:
     # Generates an execution apply for Terraform
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      run: terraform apply -auto-approve 
+      run: terraform apply -auto-approve -lock=false
       env:
         TF_VAR_MENDER_USERNAME : ${{ secrets.MENDER_USERNAME }}
         TF_VAR_MENDER_PASSWORD : ${{ secrets.MENDER_PASSWORD }}
