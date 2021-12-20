@@ -85,5 +85,5 @@ jobs:
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         uses: google-github-actions/upload-cloud-storage@main
         with:
-          path: ${{ github.workspace }}/devices/deployment/rpi-package.zip${GITHUB_SHA::8}
+          path: ${{ github.workspace }}/devices/deployment/rpi-package.zip#${GITHUB_SHA::8}
           destination: ${{ secrets.GCP_PROJECT_ID }}_data_deployment/device/
