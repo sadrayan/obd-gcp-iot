@@ -9,4 +9,4 @@ date=$(date '+%Y_%m_%d_%H:%M:%S')
 zip -r9 ${OLDPWD}/deployment/rpi-package.zip#$date .
 cd $OLDPWD
 zip -g deployment/rpi-package.zip#$date *.py config.ini resources/*.pem
-echo "done creating deployment" && deployment/rpi-package.zip#$date && pwd
+echo "done creating deployment" && ls deployment/ && pwd
