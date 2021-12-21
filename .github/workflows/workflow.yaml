@@ -88,4 +88,4 @@ jobs:
           SHA: ${GITHUB_SHA::8}
         with:
           path: ${{ github.workspace }}/devices/deployment/rpi-package.zip
-          destination: ${{ secrets.GCP_PROJECT_ID }}_data_deployment/device/$SHA
+          destination: ${{ secrets.GCP_PROJECT_ID }}_data_deployment/device/${{ github.sha }}
