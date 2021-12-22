@@ -12,7 +12,7 @@ const { authorizeMender, getDeployments } = require("./mender_service");
 
   await authorizeMender();
   const res = await getDeployments();
-  console.log(res);
+  // console.log(res);
 };
 
 
