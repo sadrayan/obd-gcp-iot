@@ -1,12 +1,3 @@
-resource "google_pubsub_topic" "iot_devicestatus" {
-  name = "iot_devicestatus"
-}
-
-resource "google_pubsub_topic" "iot_telemetry" {
-  name = "iot_telemetry"
-}
-
-
 resource "google_cloudiot_registry" "cvt_iot_registry" {
   name = "cvt_iot_registry"
 

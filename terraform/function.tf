@@ -35,6 +35,7 @@ resource "google_cloudfunctions_function" "function" {
   environment_variables = {
     MENDER_USERNAME = var.MENDER_USERNAME
     MENDER_PASSWORD = var.MENDER_PASSWORD
+    MENDER_RESPONSE_TOPIC =  google_pubsub_topic.mender_response_topic.name
   }
 }
 
