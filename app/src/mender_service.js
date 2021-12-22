@@ -1,7 +1,7 @@
 require("dotenv").config();
 const axios = require("axios");
-const PubSub = require(`@google-cloud/pubsub`);
-const pubsub = new PubSub();
+const {PubSub} = require('@google-cloud/pubsub');
+const pubsub = new PubSub(process.env.GCP_PROJECT);
 
 
 const MENDER_LOGIN_URL = "https://hosted.mender.io/api/management/v1/useradm/auth/login";
