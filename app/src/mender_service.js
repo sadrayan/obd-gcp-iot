@@ -1,5 +1,8 @@
-const axios = require("axios");
 require("dotenv").config();
+const axios = require("axios");
+const PubSub = require(`@google-cloud/pubsub`);
+const pubsub = new PubSub();
+
 
 const MENDER_LOGIN_URL = "https://hosted.mender.io/api/management/v1/useradm/auth/login";
 const MENDER_LIST_DEPLOYMENT_URL = "https://hosted.mender.io/api/management/v1/deployments/deployments";
@@ -33,6 +36,7 @@ const getDeployments = async () => {
   try {
     const response = await axios.get(MENDER_LIST_DEPLOYMENT_URL);
     //   console.log(response)
+    await publishMessage(response.data)
     return response.data;
   } catch (error) {
     console.error(error.config, error.response.data);
@@ -49,6 +53,23 @@ const getArtifacts = async () => {
     throw new Error("Mender Authentication failed...");
   }
 };
+
+
+const publishMessage = async(data) => {
+  const dataBuffer = Buffer.from(data);
+
+  pubsub
+    .topic(process.env.MENDER_RESPONSE_TOPIC)
+    .publisher()
+    .publish(dataBuffer)
+    .then(messageId => {
+      console.log(`Message ${messageId} published.`);
+    })
+    .catch(err => {
+      console.error('ERROR:', err);
+    });
+}
+
 
 exports.authorizeMender = authorizeMender;
 exports.getDeployments  = getDeployments;

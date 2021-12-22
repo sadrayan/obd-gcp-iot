@@ -15,5 +15,6 @@ const { authorizeMender, getDeployments } = require("./mender_service");
   console.log(res);
 };
 
+
 // file = { bucket: "bucket", name: "somefile.txt" };
 // listDevice(file, null);
