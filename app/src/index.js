@@ -1,4 +1,4 @@
-const { authorizeMender, getDeployments } = require("./mender_service");
+const { authorizeMender, getDeployments, publishMessage } = require("./mender_service");
 
 /**
  * Cloud Function to be triggered by Cloud Storage Device artifact updates
@@ -12,6 +12,7 @@ const { authorizeMender, getDeployments } = require("./mender_service");
 
   await authorizeMender();
   const res = await getDeployments();
+  publishMessage(res)
   // console.log(res);
 };
 

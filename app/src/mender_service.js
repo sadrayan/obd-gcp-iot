@@ -36,7 +36,7 @@ const getDeployments = async () => {
   try {
     const response = await axios.get(MENDER_LIST_DEPLOYMENT_URL);
     //   console.log(response)
-    await publishMessage(response.data)
+    // await publishMessage(response.data)
     return response.data;
   } catch (error) {
     console.error(error.config, error.response.data);
@@ -74,3 +74,4 @@ const publishMessage = async(data) => {
 exports.authorizeMender = authorizeMender;
 exports.getDeployments  = getDeployments;
 exports.getArtifacts    = getArtifacts;
+exports.publishMessage  = publishMessage;
